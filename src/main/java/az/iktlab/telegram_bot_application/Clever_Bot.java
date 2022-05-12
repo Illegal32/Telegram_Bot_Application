@@ -1,9 +1,12 @@
 package az.iktlab.telegram_bot_application;
 
+import az.iktlab.telegram_bot_application.Service.AgroService;
+import az.iktlab.telegram_bot_application.Service.impl.AgroServiceImpl;
 import az.iktlab.telegram_bot_application.client.AgroServiceClient;
 import az.iktlab.telegram_bot_application.dao.model.Body;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,12 +15,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class Clever_Bot extends TelegramLongPollingBot {
 
+    @Autowired(required = false)
+   private AgroServiceClient client;
+
     @Autowired
-    AgroServiceClient client;
+    private AgroService service = new AgroServiceImpl();
 
     @Override
     public void onUpdateReceived(Update update) {
 
+        System.out.println(service.getAgroServices());
 
         System.out.println("----------");
         System.out.println(update.getMessage().getText());
@@ -49,6 +56,8 @@ public class Clever_Bot extends TelegramLongPollingBot {
 
 //            List<Object> data2 = (List<Object>) client.getAgroServices().getAGRO_SERVICES().getBody();
 
+            System.out.println(client);
+            System.out.println(client.getAgroServices());
           Body body=  client.getAgroServices().getAGRO_SERVICES().getBody();
 
 //            System.out.println(body);
