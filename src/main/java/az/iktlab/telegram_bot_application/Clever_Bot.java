@@ -1,12 +1,9 @@
 package az.iktlab.telegram_bot_application;
 
-import az.iktlab.telegram_bot_application.Service.AgroService;
-import az.iktlab.telegram_bot_application.Service.impl.AgroServiceImpl;
 import az.iktlab.telegram_bot_application.client.AgroServiceClient;
 import az.iktlab.telegram_bot_application.dao.model.Body;
-import org.springframework.beans.factory.annotation.Autowired;
+import az.iktlab.telegram_bot_application.dao.model.CodeBeautify;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,16 +12,15 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class Clever_Bot extends TelegramLongPollingBot {
 
-    @Autowired(required = false)
-   private AgroServiceClient client;
+   private final AgroServiceClient client;
 
-    @Autowired
-    private AgroService service = new AgroServiceImpl();
+    public Clever_Bot(AgroServiceClient client) {
+        this.client = client;
+    }
+
 
     @Override
     public void onUpdateReceived(Update update) {
-
-        System.out.println(service.getAgroServices());
 
         System.out.println("----------");
         System.out.println(update.getMessage().getText());
@@ -54,23 +50,15 @@ public class Clever_Bot extends TelegramLongPollingBot {
         }
         if (command.equals("/list")) {
 
-//            List<Object> data2 = (List<Object>) client.getAgroServices().getAGRO_SERVICES().getBody();
+            CodeBeautify result = client.getAgroServices();
 
-            System.out.println(client);
-            System.out.println(client.getAgroServices());
-          Body body=  client.getAgroServices().getAGRO_SERVICES().getBody();
+            StringBuilder builder = new StringBuilder();
+            result.getAGRO_SERVICES().getBody().getAGRO_SERVICE().forEach(builder::append);
 
-//            System.out.println(body);
 
-//            System.out.println(Arrays.toString(data2.toArray()));
-//            for (String str1 : data2) {
-
-            System.out.println(client);
-
-            System.out.println(client.getAgroServices());
             SendMessage response = new SendMessage();
             response.setChatId(update.getMessage().getChatId().toString());
-            response.setText(String.valueOf(body));
+            response.setText(builder.toString());
 
             try {
                 execute(response);

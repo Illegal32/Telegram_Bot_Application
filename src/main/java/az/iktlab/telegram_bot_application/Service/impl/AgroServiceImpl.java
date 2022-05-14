@@ -20,7 +20,8 @@ public class AgroServiceImpl implements AgroService {
     public CodeBeautify getAgroServices() {
 
         System.out.println(client);
-        return client.getAgroServices();
+//        return client.getAgroServices();
+        return null;
     }
 
 //    public void onUpdateReceived(Update update) {
